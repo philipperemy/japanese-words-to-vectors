@@ -35,7 +35,7 @@ def generate_vectors(input_filename, output_filename, output_filename_2):
     start = time.time()
     model = Word2Vec(LineSentence(input_filename),
                      size=VECTORS_SIZE, window=5, min_count=5,
-                     workers=cpu_count(), iter=3)
+                     workers=cpu_count(), iter=5)
     model.save(output_filename)
     model.save_word2vec_format(output_filename_2, binary=False)
     print('Finished generate_vectors(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
