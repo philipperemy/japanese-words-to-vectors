@@ -1,0 +1,7 @@
+*.pyc
+*.bz2
+*.txt
+*.model
+*.npy
+.DS_Store
+.idea/
