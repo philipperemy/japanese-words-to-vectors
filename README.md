@@ -41,6 +41,7 @@ Tokenizing means adding spaces to the compacted text we have. We try to find out
 The output is `JA_WIKI_TEXT_TOKENS_FILENAME`. It looks like this:
 `trebuchet   ms   フォント   アンパサンド   と は   を 意味 する`
 
+### Infer the vectors
 Finally the (Gensim)[https://radimrehurek.com/gensim/] library is used to perform the word2vec algorithm with the parameters:
 - size of 50 (dimensionality of the feature vectors)
 - window of 5 (maximum distance between the current and predicted word within a sentence)
