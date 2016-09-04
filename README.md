@@ -28,21 +28,23 @@ JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt'
 process_wiki_to_text(INPUT_FILENAME, JA_WIKI_TEXT_FILENAME, JA_WIKI_SENTENCES_FILENAME)
 ```
 
-The output is two files `JA_WIKI_TEXT_FILENAME` whose content looks like:
+The output consists of two files:
+
+- `JA_WIKI_TEXT_FILENAME` whose content looks like:
 `trebuchet msフォントアンパサンドとはを意味する記号である`
 where each line corresponds to an article.
 
-and `JA_WIKI_SENTENCES_FILENAME` where each line corresponds to a sentence or chunk of words in the text. This file will not be used in the word2vec algorithm but can be useful to train a sentence to vec (named skip-thoughts, available here https://github.com/ryankiros/skip-thoughts/).
+- `JA_WIKI_SENTENCES_FILENAME` where each line corresponds to a sentence or chunk of words in the text. This file will not be used in the word2vec algorithm but can be useful to train a sentence to vec (named skip-thoughts, available here https://github.com/ryankiros/skip-thoughts/).
 
 ### Tokenize the text
 
-Tokenizing means adding spaces to the compacted text we have. We try to find out the words. For this, we use the library called `TinySegmenter3` (https://pypi.python.org/pypi/tinysegmenter3/0.1.0) which is able to tokenize japanese corpus with more than 95 percent accuracy (source: http://lilyx.net/tinysegmenter-in-python/).
+Tokenizing means separating the full text into words by using spaces as delimiters. For this, we use a library called [TinySegmenter3](https://pypi.python.org/pypi/tinysegmenter3/0.1.0) which is able to tokenize japanese corpus with more than 95 percent accuracy (source: http://lilyx.net/tinysegmenter-in-python/).
 
 The output is `JA_WIKI_TEXT_TOKENS_FILENAME`. It looks like this:
 `trebuchet   ms   フォント   アンパサンド   と は   を 意味 する`
 
 ### Infer the vectors
-Finally the (Gensim)[https://radimrehurek.com/gensim/] library is used to perform the word2vec algorithm with the parameters:
+Finally, the [Gensim](https://radimrehurek.com/gensim/) library is used to perform the word2vec algorithm with the parameters:
 - size of 50 (dimensionality of the feature vectors)
 - window of 5 (maximum distance between the current and predicted word within a sentence)
 - min count of 5 (ignore all words with total frequency lower than this)
@@ -57,14 +59,9 @@ While training, the console output looks like:
 2016-09-04 02:54:41,390 : INFO : PROGRESS: at 99.98% examples, 482630 words/s, in_qsize 8, out_qsize 0
 ```
 Once it's finished, 4 new files are generated:
-- ja-gensim.50d.data.model
-This file contains the model in the binary format. Use `model = Word2Vec.load(fname)` to get your word2vec model.
-- ja-gensim.50d.data.txt
-This file contains the model in the text format. Can be used in any other python script without `Gensim` library!
-- ja-gensim.50d.data.model.syn0.npy
-File generated automatically. Contains some numpy arrays.
-- ja-gensim.50d.data.model.syn1neg.npy
-File generated automatically. Contains some numpy arrays.
+- `1ja-gensim.50d.data.model`. This file contains the model in the binary format. Use `model = Word2Vec.load(fname)` to get your word2vec model.
+- `1ja-gensim.50d.data.txt`. This file contains the model in the text format. Can be used in any other python script without the [Gensim](https://radimrehurek.com/gensim/) library!
+- `1ja-gensim.50d.data.model.syn0.npy1` and `ja-gensim.50d.data.model.syn1neg.npy`. Files generated automatically. Contains some numpy arrays. It must be in the same directory.
 
 Finally, let's inspect `ja-gensim.50d.data.txt`
 
