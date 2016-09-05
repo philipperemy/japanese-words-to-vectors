@@ -18,9 +18,13 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 VECTORS_SIZE = 50
 INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2'
+
 JA_WIKI_TEXT_FILENAME = 'jawiki-latest-text.txt'
 JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt'
+
 JA_WIKI_TEXT_TOKENS_FILENAME = 'jawiki-latest-text-tokens.txt'
+JA_WIKI_SENTENCES_TOKENS_FILENAME = 'jawiki-latest-text-sentences-tokens.txt'
+
 JA_VECTORS_MODEL_FILENAME = 'ja-gensim.{}d.data.model'.format(VECTORS_SIZE)
 JA_VECTORS_TEXT_FILENAME = 'ja-gensim.{}d.data.txt'.format(VECTORS_SIZE)
 JA_WIKI_LATEST_URL = 'https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2'
@@ -96,4 +100,5 @@ if __name__ == '__main__':
 
     process_wiki_to_text(INPUT_FILENAME, JA_WIKI_TEXT_FILENAME, JA_WIKI_SENTENCES_FILENAME)
     tokenize_text(JA_WIKI_TEXT_FILENAME, JA_WIKI_TEXT_TOKENS_FILENAME)
+    tokenize_text(JA_WIKI_SENTENCES_FILENAME, JA_WIKI_SENTENCES_TOKENS_FILENAME)
     generate_vectors(JA_WIKI_TEXT_TOKENS_FILENAME, JA_VECTORS_MODEL_FILENAME, JA_VECTORS_TEXT_FILENAME)
