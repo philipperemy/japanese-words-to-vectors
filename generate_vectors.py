@@ -8,7 +8,7 @@ import os
 import time
 from multiprocessing import cpu_count
 
-import tinysegmenter
+import MeCab
 import wget
 from gensim.corpora import WikiCorpus
 from gensim.models import Word2Vec
@@ -45,14 +45,25 @@ def generate_vectors(input_filename, output_filename, output_filename_2):
     print('Finished generate_vectors(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
 
 
+def get_words(text):
+    mt = MeCab.Tagger("-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+    mt.parse("")
+    parsed = mt.parseToNode(text)
+    components = []
+    while parsed:
+        components.append(parsed.surface)
+        parsed = parsed.next
+    return components
+
+
 def tokenize_text(input_filename, output_filename):
     if os.path.isfile(output_filename):
         return
     start = time.time()
-    with open(output_filename, 'w') as out:
-        with open(input_filename, 'r') as inp:
+    with open(output_filename, 'wb') as out:
+        with open(input_filename, 'rb') as inp:
             for i, text in enumerate(inp.readlines()):
-                tokenized_text = ' '.join(tinysegmenter.tokenize(text.decode('utf8')))
+                tokenized_text = ' '.join(get_words(text.decode('utf8')))
                 out.write(tokenized_text.encode('utf8'))
                 if i % 100 == 0 and i != 0:
                     logging.info('Tokenized {} articles'.format(i))
@@ -65,8 +76,8 @@ def process_wiki_to_text(input_filename, output_text_filename, output_sentences_
     start = time.time()
     intermediary_time = None
     sentences_count = 0
-    with open(output_text_filename, 'w') as out:
-        with open(output_sentences_filename, 'w') as out_sentences:
+    with open(output_text_filename, 'wb') as out:
+        with open(output_sentences_filename, 'wb') as out_sentences:
             wiki = WikiCorpus(input_filename, lemmatize=False, dictionary={}, processes=cpu_count())
             wiki.metadata = True
             texts = wiki.get_texts()
