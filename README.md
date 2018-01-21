@@ -2,11 +2,11 @@
 
 ## About
 
-Word2vec (word to vectors) approach for Japanese language using Gensim (Deep Learning skip-gram and CBOW models). The model is trained on the *Japanese version of Wikipedia* available at [JaWiki](https://dumps.wikimedia.org/jawiki/latest/).
+Word2vec (word to vectors) approach for Japanese language using Gensim (Deep Learning skip-gram and CBOW models). The model is trained on the *Japanese version of Wikipedia* available at [jawiki-latest-pages-articles.xml.bz2](https://dumps.wikimedia.org/jawiki/latest/).
 
 <i>Definition: Word2vec is a group of related models that are used to produce word embeddings. These models are shallow, two-layer neural networks that are trained to reconstruct linguistic contexts of words. Word2vec takes as its input a large corpus of text and produces a high-dimensional space (typically of several hundred dimensions), with each unique word in the corpus being assigned a corresponding vector in the space. Word vectors are positioned in the vector space such that words that share common contexts in the corpus are located in close proximity to one another in the space.</i>
 
-More information about the word2vec properties is available here: http://nlp.stanford.edu/projects/glove/
+Further reading about word2vec: http://nlp.stanford.edu/projects/glove/
 
 ## Usage
 
@@ -14,8 +14,9 @@ Generating the vectors from a wikipedia dump takes about 2~3 hours on a Core i5,
 ```
 git clone https://github.com/philipperemy/japanese-word-to-vectors.git
 cd japanese-word-to-vectors
-pip install -r requirements.txt
-python generate_vectors.py
+pip3 install -r requirements.txt # you can create a virtual env before.
+wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 # 2.4GB. It can take some time depending of your internet speed!
+python3 generate_vectors.py
 ```
 
 ### Convert Wiki dump to text
@@ -38,10 +39,16 @@ where each line corresponds to an article.
 
 ### Tokenize the text
 
-Tokenizing means separating the full text into words by using spaces as delimiters. For this, we use a library called [TinySegmenter3](https://pypi.python.org/pypi/tinysegmenter3/0.1.0) which is able to tokenize japanese corpus with more than 95 percent accuracy (source: http://lilyx.net/tinysegmenter-in-python/).
+Tokenizing means separating the full text into words by using spaces as delimiters. Two approaches are available here:
+
+#### TinySegmenter3 (easy but less accurate in the tokenization phase)
+
+For this, we use a library called [TinySegmenter3](https://pypi.python.org/pypi/tinysegmenter3/0.1.0) which is able to tokenize japanese corpus with more than 95 percent accuracy (source: http://lilyx.net/tinysegmenter-in-python/).
 
 The output is `JA_WIKI_TEXT_TOKENS_FILENAME`. It looks like this:
 `trebuchet   ms   フォント   アンパサンド   と は   を 意味 する`
+
+#### MeCab (advanced but very accurate)
 
 ### Infer the vectors
 Finally, the [Gensim](https://radimrehurek.com/gensim/) library is used to perform the word2vec algorithm with the parameters:
