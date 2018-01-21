@@ -1,20 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from __future__ import print_function
-
+import argparse
 import logging
 import os
 import time
 from multiprocessing import cpu_count
 
-import MeCab
+import tinysegmenter
 import wget
 from gensim.corpora import WikiCorpus
 from gensim.models import Word2Vec
 from gensim.models.word2vec import LineSentence
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--mecab', action='store_true')
+
+args = parser.parse_args()
+USE_MECAB_TOKENIZER = args.mecab is not None
+
+if USE_MECAB_TOKENIZER:
+    logging.info('Using the MeCab tokenizer. Installation procedure is ' +
+                 'provided at http://www.robfahey.co.uk/blog/japanese-text-analysis-in-python/')
+    import MeCab
+else:
+    logging.info('Using the tinysegmenter tokenizer. Its not very accurate. ' +
+                 'Consider using MeCab instead with option --mecab.')
 
 VECTORS_SIZE = 50
 INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2'
@@ -35,17 +48,19 @@ JA_WIKI_LATEST_URL = 'https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pa
 
 def generate_vectors(input_filename, output_filename, output_filename_2):
     if os.path.isfile(output_filename):
+        logging.info('Skipping generate_vectors(). File already exists: {}'.format(output_filename))
         return
     start = time.time()
     model = Word2Vec(LineSentence(input_filename),
                      size=VECTORS_SIZE, window=5, min_count=5,
                      workers=cpu_count(), iter=5)
     model.save(output_filename)
-    model.save_word2vec_format(output_filename_2, binary=False)
-    print('Finished generate_vectors(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
+    model.wv.save_word2vec_format(output_filename_2, binary=False)
+    logging.info('Finished generate_vectors(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
 
 
 def get_words(text):
+    import MeCab
     mt = MeCab.Tagger("-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
     mt.parse("")
     parsed = mt.parseToNode(text)
@@ -58,20 +73,26 @@ def get_words(text):
 
 def tokenize_text(input_filename, output_filename):
     if os.path.isfile(output_filename):
+        logging.info('Skipping tokenize_text(). File already exists: {}'.format(output_filename))
         return
     start = time.time()
     with open(output_filename, 'wb') as out:
         with open(input_filename, 'rb') as inp:
             for i, text in enumerate(inp.readlines()):
-                tokenized_text = ' '.join(get_words(text.decode('utf8')))
+                if USE_MECAB_TOKENIZER:
+                    tokenized_text = ' '.join(get_words(text.decode('utf8')))
+                else:
+                    tokenized_text = ' '.join(tinysegmenter.tokenize(text.decode('utf8')))
                 out.write(tokenized_text.encode('utf8'))
                 if i % 100 == 0 and i != 0:
-                    logging.info('Tokenized {} articles'.format(i))
-    print('Finished tokenize_text(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
+                    logging.info('Tokenized {} articles.'.format(i))
+    logging.info('Finished tokenize_text(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
 
 
 def process_wiki_to_text(input_filename, output_text_filename, output_sentences_filename):
     if os.path.isfile(output_text_filename) and os.path.isfile(output_sentences_filename):
+        logging.info('Skipping process_wiki_to_text(). Files already exist: {} {}'.format(output_text_filename,
+                                                                                          output_sentences_filename))
         return
     start = time.time()
     intermediary_time = None
@@ -83,7 +104,7 @@ def process_wiki_to_text(input_filename, output_text_filename, output_sentences_
             texts = wiki.get_texts()
             for i, article in enumerate(texts):
                 text_list = article[0]  # article[1] refers to the name of the article.
-                sentences = [elt.decode('utf-8') for elt in text_list]
+                sentences = text_list
                 # re.search('[a-zA-Z]+', string) maybe add it
                 sentences_count += len(sentences)
                 for sentence in sentences:
@@ -102,7 +123,8 @@ def process_wiki_to_text(input_filename, output_text_filename, output_sentences_
                     logging.info('Saved {0} articles containing {1} sentences ({2} sentences/sec).'.format(i + 1,
                                                                                                            sentences_count,
                                                                                                            sentences_per_sec))
-    print('Finished process_wiki_to_text(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
+        logging.info(
+            'Finished process_wiki_to_text(). It took {0:.2f} s to execute.'.format(round(time.time() - start, 2)))
 
 
 if __name__ == '__main__':
@@ -111,5 +133,8 @@ if __name__ == '__main__':
 
     process_wiki_to_text(INPUT_FILENAME, JA_WIKI_TEXT_FILENAME, JA_WIKI_SENTENCES_FILENAME)
     tokenize_text(JA_WIKI_TEXT_FILENAME, JA_WIKI_TEXT_TOKENS_FILENAME)
-    tokenize_text(JA_WIKI_SENTENCES_FILENAME, JA_WIKI_SENTENCES_TOKENS_FILENAME)
+
+    # Useful for sentences to vec (skip thought vectors) but not for word2vec.
+    # tokenize_text(JA_WIKI_SENTENCES_FILENAME, JA_WIKI_SENTENCES_TOKENS_FILENAME)
+
     generate_vectors(JA_WIKI_TEXT_TOKENS_FILENAME, JA_VECTORS_MODEL_FILENAME, JA_VECTORS_TEXT_FILENAME)
