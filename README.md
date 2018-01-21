@@ -19,6 +19,8 @@ wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.
 python3 generate_vectors.py
 ```
 
+If `generate_vectors.py` does not detect the file `jawiki-latest-pages-articles.xml.bz2`, it will download it automatically before running the long generation of the vectors.
+
 ### Convert Wiki dump to text
 The first step is to extract the text and the sentences of the dump. It is done in this function:
 
