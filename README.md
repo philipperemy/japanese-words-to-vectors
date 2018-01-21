@@ -16,7 +16,13 @@ git clone https://github.com/philipperemy/japanese-word-to-vectors.git
 cd japanese-word-to-vectors
 pip3 install -r requirements.txt # you can create a virtual env before.
 wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 # 2.4GB. It can take some time depending of your internet speed!
-python3 generate_vectors.py
+
+# will use TinySegmenter3 for the tokenization (easy to install but less accurate)
+python3 generate_vectors.py 
+
+# recommended. will use the MeCab tokenizer. Installation is available at http://www.robfahey.co.uk/blog/japanese-text-analysis-in-python/
+# next section of the README called "Tokenize the text" provides the details to install it as well.
+python3 generate_vectors.py --mecab
 ```
 
 If `generate_vectors.py` does not detect the file `jawiki-latest-pages-articles.xml.bz2`, it will download it automatically before running the long generation of the vectors.
@@ -51,6 +57,34 @@ The output is `JA_WIKI_TEXT_TOKENS_FILENAME`. It looks like this:
 `trebuchet   ms   フォント   アンパサンド   と は   を 意味 する`
 
 #### MeCab (advanced but very accurate)
+
+I strongly advise you to read this tutorial first: [How to install MeCab](http://www.robfahey.co.uk/blog/japanese-text-analysis-in-python/).
+
+The installation depends on your OS:
+
+##### MacOS
+
+```
+brew install mecab
+brew install mecab-ipadic
+brew install git curl xz
+git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
+cd mecab-ipadic-neologd
+./bin/install-mecab-ipadic-neologd -n
+pip3 install mecab-python3
+```
+
+##### Ubuntu
+
+```
+sudo apt-get install mecab mecab-ipadic libmecab-dev
+sudo apt-get install mecab-ipadic-utf8
+sudo apt-get install git curl
+git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
+cd mecab-ipadic-neologd
+sudo ./bin/install-mecab-ipadic-neologd -n
+pip3 install mecab-python3
+```
 
 ### Infer the vectors
 Finally, the [Gensim](https://radimrehurek.com/gensim/) library is used to perform the word2vec algorithm with the parameters:
