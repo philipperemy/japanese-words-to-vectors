@@ -102,9 +102,9 @@ While training, the console output looks like:
 2016-09-04 02:54:41,390 : INFO : PROGRESS: at 99.98% examples, 482630 words/s, in_qsize 8, out_qsize 0
 ```
 Once it's finished, 4 new files are generated:
-- `1ja-gensim.50d.data.model`. This file contains the model in the binary format. Use `model = Word2Vec.load(fname)` to get your word2vec model.
-- `1ja-gensim.50d.data.txt`. This file contains the model in the text format. Can be used in any other python script without the [Gensim](https://radimrehurek.com/gensim/) library!
-- `1ja-gensim.50d.data.model.syn0.npy1` and `ja-gensim.50d.data.model.syn1neg.npy`. Files generated automatically. Contains some numpy arrays. It must be in the same directory.
+- `ja-gensim.50d.data.model`. This file contains the model in the binary format. Use `model = Word2Vec.load(fname)` to get your word2vec model.
+- `ja-gensim.50d.data.txt`. This file contains the model vectors in the text format. Can be used in any other python script without the [Gensim](https://radimrehurek.com/gensim/) library!
+- `ja-gensim.50d.data.model.syn1neg.npy` and `ja-gensim.50d.data.model.wv.syn0.npy`. Files generated automatically. Contains some numpy arrays (weights and other parameters). It must be in the same directory.
 
 Finally, let's inspect `ja-gensim.50d.data.txt`
 
