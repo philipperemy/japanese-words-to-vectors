@@ -25,9 +25,9 @@ If `generate_vectors.py` does not detect the file `jawiki-latest-pages-articles.
 The first step is to extract the text and the sentences of the dump. It is done in this function:
 
 ```
-INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2'
-JA_WIKI_TEXT_FILENAME = 'jawiki-latest-text.txt'
-JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt'
+INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2' # This is the only input filename
+JA_WIKI_TEXT_FILENAME = 'jawiki-latest-text.txt' # first output file of the function
+JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt' # second output file of the function
 process_wiki_to_text(INPUT_FILENAME, JA_WIKI_TEXT_FILENAME, JA_WIKI_SENTENCES_FILENAME)
 ```
 
