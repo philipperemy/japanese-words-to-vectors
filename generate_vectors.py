@@ -108,9 +108,9 @@ def process_wiki_to_text(input_filename, output_text_filename, output_sentences_
                 # re.search('[a-zA-Z]+', string) maybe add it
                 sentences_count += len(sentences)
                 for sentence in sentences:
-                    out_sentences.write((sentence + u'\n').encode('utf-8'))
-                text = ' '.join(sentences) + u'\n'
-                out.write(text.encode('utf-8'))
+                    out_sentences.write((sentence + b'\n'))
+                text = b' '.join(sentences) + b'\n'
+                out.write(text)
                 if i % (100 - 1) == 0 and i != 0:
                     if intermediary_time is None:
                         intermediary_time = time.time()
