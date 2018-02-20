@@ -15,22 +15,39 @@ from gensim.models.word2vec import LineSentence
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--mecab', action='store_true')
+parser = argparse.ArgumentParser(description='Word2vec approach for Japanese language using Gensim.')
+parser.add_argument(
+    '--mecab',
+    help='Use Mecap as tokenizer',
+    action='store_true',
+    required=False
+)
+
+parser.add_argument(
+    '--wiki',
+    help='Path to Wikipedia dump as bzip2',
+    dest='wikipath',
+    required=False
+)
+
+parser.add_argument(
+    '--vectorsize',
+    type=int,
+    required=False,
+    help='Gensim Vector Size'
+)
+
+parser.set_defaults(
+    wikipath='jawiki-latest-pages-articles.xml.bz2',
+    mecab=False,
+    vectorsize=50
+)
 
 args = parser.parse_args()
-USE_MECAB_TOKENIZER = args.mecab is not None
 
-if USE_MECAB_TOKENIZER:
-    logging.info('Using the MeCab tokenizer. Installation procedure is ' +
-                 'provided at http://www.robfahey.co.uk/blog/japanese-text-analysis-in-python/')
-    import MeCab
-else:
-    logging.info('Using the tinysegmenter tokenizer. Its not very accurate. ' +
-                 'Consider using MeCab instead with option --mecab.')
-
-VECTORS_SIZE = 50
-INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2'
+USE_MECAB_TOKENIZER = args.mecab
+VECTORS_SIZE = args.vectorsize
+INPUT_FILENAME = args.wikipath
 
 JA_WIKI_TEXT_FILENAME = 'jawiki-latest-text.txt'
 JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt'
@@ -41,6 +58,14 @@ JA_WIKI_SENTENCES_TOKENS_FILENAME = 'jawiki-latest-text-sentences-tokens.txt'
 JA_VECTORS_MODEL_FILENAME = 'ja-gensim.{}d.data.model'.format(VECTORS_SIZE)
 JA_VECTORS_TEXT_FILENAME = 'ja-gensim.{}d.data.txt'.format(VECTORS_SIZE)
 JA_WIKI_LATEST_URL = 'https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2'
+
+if USE_MECAB_TOKENIZER:
+    logging.info('Using the MeCab tokenizer. Installation procedure is ' +
+                 'provided at http://www.robfahey.co.uk/blog/japanese-text-analysis-in-python/')
+    import MeCab
+else:
+    logging.info('Using the tinysegmenter tokenizer. Its not very accurate. ' +
+                 'Consider using MeCab instead with option --mecab.')
 
 # CHECK WHERE THE HECK ARE THE PUNCTUATIONS GONE. Okay it's in get_text()
 # WHY WE DO NOT HAVE ANY OUTPUT ON WORD2VEC. We have to define a logging interface
