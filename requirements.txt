@@ -2,3 +2,4 @@ gensim == 0.13.1
 numpy == 1.11.1
 tinysegmenter3 == 0.1.0
 wget == 3.2
+mecab-python3==0.7

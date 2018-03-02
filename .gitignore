@@ -5,3 +5,5 @@
 *.npy
 .DS_Store
 .idea/
+.venv
+!tests/jawiki-latest-pages-articles.xml.bz2
