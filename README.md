@@ -11,7 +11,7 @@ Further reading about word2vec: http://nlp.stanford.edu/projects/glove/
 ## Usage
 
 Generating the vectors from a wikipedia dump takes about 2~3 hours on a Core i5, with the default parameters.
-```
+```bash
 git clone https://github.com/philipperemy/japanese-word-to-vectors.git
 cd japanese-word-to-vectors
 pip3 install -r requirements.txt # you can create a virtual env before.
@@ -30,7 +30,7 @@ If `generate_vectors.py` does not detect the file `jawiki-latest-pages-articles.
 ### Convert Wiki dump to text
 The first step is to extract the text and the sentences of the dump. It is done in this function:
 
-```
+```python
 INPUT_FILENAME = 'jawiki-latest-pages-articles.xml.bz2' # This is the only input filename
 JA_WIKI_TEXT_FILENAME = 'jawiki-latest-text.txt' # first output file of the function
 JA_WIKI_SENTENCES_FILENAME = 'jawiki-latest-text-sentences.txt' # second output file of the function
@@ -64,7 +64,7 @@ The installation depends on your OS:
 
 ##### MacOS
 
-```
+```bash
 brew install mecab
 brew install mecab-ipadic
 brew install git curl xz
@@ -76,7 +76,7 @@ pip3 install mecab-python3
 
 ##### Ubuntu
 
-```
+```bash
 sudo apt-get install mecab mecab-ipadic libmecab-dev
 sudo apt-get install mecab-ipadic-utf8
 sudo apt-get install git curl
