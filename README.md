@@ -1,5 +1,7 @@
 # Japanese Word2Vec
 
+こんにちは！
+
 ## About
 
 Word2vec (word to vectors) approach for Japanese language using Gensim (Deep Learning skip-gram and CBOW models). The model is trained on the *Japanese version of Wikipedia* available at [jawiki-latest-pages-articles.xml.bz2](https://dumps.wikimedia.org/jawiki/latest/).
