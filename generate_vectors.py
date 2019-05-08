@@ -194,4 +194,4 @@ if __name__ == '__main__':
     # Useful for sentences to vec (skip thought vectors) but not for word2vec.
     # tokenize_text(JA_WIKI_SENTENCES_FILENAME, JA_WIKI_SENTENCES_TOKENS_FILENAME)
 
-    generate_vectors(JA_WIKI_SENTENCES_FILENAME, JA_VECTORS_MODEL_FILENAME, JA_VECTORS_TEXT_FILENAME)
+    generate_vectors(JA_WIKI_TEXT_TOKENS_FILENAME, JA_VECTORS_MODEL_FILENAME, JA_VECTORS_TEXT_FILENAME)
