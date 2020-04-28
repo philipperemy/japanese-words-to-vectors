@@ -126,7 +126,7 @@ def tokenize_text(input_filename, output_filename):
                 else:
                     tokenized_text = ' '.join(tinysegmenter.tokenize(text))
 
-                out.write(tokenized_text)
+                out.write(tokenized_text + '\n')
 
                 if i % 100 == 0 and i != 0:
                     logging.info('Tokenized {} articles.'.format(i))
